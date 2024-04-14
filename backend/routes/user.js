@@ -1,8 +1,11 @@
 const express = require('express')
 const {User} = require('../db')
 const jwt = require("jsonwebtoken");
+const authMiddleware = require('../middleware')
 const {JWT_SECRET} = require('../config')
 const zod = require("zod");
+
+
 const router = express.Router()
 
 const signupSchema  = zod.object({
@@ -90,6 +93,64 @@ router.post('/signin',async (req,res)=>{
     res.status(200).json({
         'message':"Login Successfull",
         tonken : token
+    })
+})
+const updateBody = zod.object({
+    firstName: zod.string().optional(),
+    lastName : zod.string().optional(),
+    password : zod.string().optional()
+})
+
+router.put('/',authMiddleware,async(req,res)=>{
+    const {sucess} = updateBody.safeParse(req.body)
+    //check with zod
+    if(!sucess){
+        return res.status(400).json({
+            'message':"Give valid data"
+        })
+    }
+    //find the user (no need as we are verifing in authMiddleware only so no need to double check)
+    // const presentUser = aw it User.findOne({
+    //     username:res.body.username,
+    //     password:res.body.password
+    // })
+    // if(!presentUser){
+    //     return res.status(403).json({
+    //         'message':'User not present'
+    //     })
+    // }
+
+    //update the user
+    await User.updateOne({_id : res.body.userId},res.body)
+
+    //return the response
+    res.status(200).json({
+        "message":"Updated Sucessfully"
+    })
+})
+
+//Filter
+router.get('/bulk',async(res,req)=>{
+    const filter = req.query.filter
+
+    const users = await User.find({
+        $or:[{
+            firstName:{
+                "$regex":filter
+            }
+        },{
+            lastName:{
+                "$regex":filter
+            }
+        }]
+    })
+    res.json({
+        user:users.map(u=>({
+            username:u.username,
+            firstName:u.firstName,
+            lastName:u.lastName,
+            _id:u._id
+        }))
     })
 })
 
