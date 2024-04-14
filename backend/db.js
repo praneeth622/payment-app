@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { string } = require('zod')
 
 mongoose.connect("mongodb+srv://praneethdevarasetty31:8qgJLzdzAjMvKssx@cluster0.myjyejx.mongodb.net/?retryWrites=true&w=majority",{  
 }).then(()=>{
@@ -9,27 +8,17 @@ mongoose.connect("mongodb+srv://praneethdevarasetty31:8qgJLzdzAjMvKssx@cluster0.
     console.log(err)
 })
 
-const userSchema = mongoose.Schema({
-    username:{
-        type:string,
-        required:true
-    },
-    firstname:{
-        type:string,
-        required:true
-    },
-    lastname:{
-        type:string,
-        required:true
-    },
-    password:{
-        type:string,
-        required:true
-    },
 
-})
+const userSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+    firstName: String,
+    lastName: String
+});
 
-const User = mongoose.Model("paymentUser",userSchema)
+
+
+const User = mongoose.model("paymentUser",userSchema)
 
 module.exports={
     User
