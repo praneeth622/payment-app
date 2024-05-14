@@ -9,16 +9,23 @@ const { default: mongoose } = require('mongoose');
 const router = express.Router()
 
 router.get('/balance',authMiddleware,async(req,res)=>{
-    const account = await Account.findOne({
-        userId:req.userId
-    })
-    res.status(200).json({
-        balance: account.balance
-    })
+    try{
+        const account = await Account.findOne({
+            userId:req.userId
+        })
+        res.status(200).json({
+            balance: account.balance
+        })
+    }
+    catch(err){
+        console.error("Error fetching balance:", err);
+        res.status(400).json({ message: "Internal server error" });
+    }
+    
 })
 
 //transfer API
-router.post('transfer',authMiddleware,async(req,res)=>{
+router.post('/transfer',authMiddleware,async(req,res)=>{
     //create the session
     const session = await mongoose.startSession()
 
@@ -50,13 +57,13 @@ router.post('transfer',authMiddleware,async(req,res)=>{
     }
     //Excutice the transation
     await Account.updateOne({
-        userId:res.userid
+        userId:res.userId
     },{
         $inc:{
             balance: -amount
         }
     }).session(session)
-
+    res.userid
     await Account.updateOne({
         userId:to
     },{
