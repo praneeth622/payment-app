@@ -1,5 +1,7 @@
 import React from 'react'
 import { useState } from 'react'
+import { Link } from "react-router-dom"
+
 const Signup = () => {
   const [formData, setFormData] = useState({
     firstName: '',
@@ -21,6 +23,9 @@ const Signup = () => {
   <div className="flex justify-center items-center h-screen mx-3 ">
   <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-12 pt-6 pb-6 mb-4">
     <div className="mb-4 font-bold text-black-700 text-2xl text-center"> SignUp Page </div>
+    <div className="text-slate-500 text-md pt-1 px-4 pb-4">
+    Please Enter Required Information to Sign Up
+    </div>
     <div className="mb-6 w-80">
       <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName">
         First Name
@@ -89,6 +94,15 @@ const Signup = () => {
         Sign Up
     </button>
     </div>
+    <div className="py-2 text-sm flex justify-center">
+      <div>
+        Alerady registered ?, 
+      </div>
+      <Link className="pointer underline pl-1 cursor-pointer" to='/signin'>
+        Sign In
+      </Link>
+    </div>
+
   </form>
   </div>
 )
