@@ -8,24 +8,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom"
 
 export const Signup = () => {
-
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
-
-    const handleSubmit = async()=>{
-        const response = await axios.post("http://localhost:3000/api/v1/user/signup", {
-          username,
-          firstName,
-          lastName,
-          password
-        });
-        localStorage.setItem("token", response.data.token)
-        navigate("/dashboard")
-      }
-    
 
     return <div className="bg-slate-300 h-screen flex justify-center">
     <div className="flex flex-col justify-center">
@@ -40,12 +27,26 @@ export const Signup = () => {
         }} placeholder="Doe" label={"Last Name"} />
         <InputBox onChange={e => {
           setUsername(e.target.value);
-        }} placeholder="harkirat@gmail.com" label={"Email"} />
+        }} placeholder="email@gmail.com" label={"Email"} />
         <InputBox onChange={(e) => {
           setPassword(e.target.value)
         }} placeholder="123456" label={"Password"} />
         <div className="pt-4">
-          <Button onClick={()=>handleSubmit()} label={"Sign up"} />
+          <Button onClick={async () => {
+            console.log("Data is " + username, password,lastName, firstName)
+            try{
+            const response = await axios.post("http://localhost:5000/api/v1/user/signup", {
+              username,
+              firstName,
+              lastName,
+              password
+            });
+            localStorage.setItem("token", response.data.token)
+            navigate("/dashboard")}
+            catch(err){
+              console.log("Error in submiting in data : "+err)
+            }
+          }} label={"Sign up"} />
         </div>
         <BottomWarning label={"Already have an account?"} buttonText={"Sign in"} to={"/signin"} />
       </div>
