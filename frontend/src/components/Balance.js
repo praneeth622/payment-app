@@ -1,8 +1,8 @@
 import React from 'react'
 
-export default function Balance({ value }) {
+export default function Balance({ value =10000 }) {
   return (
-    <div className="flex">
+    <div className="flex p-5">
         <div className="font-bold text-lg">
             Your balance
         </div>
